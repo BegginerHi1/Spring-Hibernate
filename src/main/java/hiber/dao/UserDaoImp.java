@@ -28,14 +28,20 @@ public class UserDaoImp implements UserDao {
         return query.getResultList();
     }
 
-    @Override
+       @Override
     public User getUserByCarModelAndCarSeries(String model, int series) {
-        TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User" +
-                " where car.model= :model and car.series = :series");
-        query.setParameter("model", model);
-        query.setParameter("series", series);
-        query.setMaxResults(1);
-        return query.getSingleResult();
+        User user = new User();
+        try {
+            TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User" +
+                    " where car.model= :model and car.series = :series");
+            query.setParameter("model", model);
+            query.setParameter("series", series);
+            query.setMaxResults(1);
+            user = query.getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("Данные параметры не подходят");
+        }
+        return user;
     }
 
 }
